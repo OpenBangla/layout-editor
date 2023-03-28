@@ -1,0 +1,73 @@
+#keyboardContainer {
+  width: 1000px;
+  margin: auto;
+}
+
+.root {
+  margin-top: 3rem;
+}
+.key {
+  background-color: #e2f9b7;
+  color: #0b4319;
+
+  margin-right: 0.8rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 1px 1px 3px gray;
+}
+
+.key:hover {
+  background-color: beige;
+}
+
+.keyLine {
+  display: flex;
+  width: 800px;
+}
+
+.scale1 {
+  width: 60px;
+}
+
+.scale2 {
+  width: 75px;
+}
+.scale3 {
+  width: 100px;
+}
+
+.scale4 {
+  width: 40px;
+}
+
+.firstKeyL1 {
+  width: 75px;
+}
+.lastKeyL1 {
+  width: 75px;
+}
+.firstKeyL2 {
+  width: 90px;
+}
+.lastKeyL2 {
+  width: 110px;
+}
+.firstKeyL3 {
+  width: 90px;
+}
+.lastKeyL3 {
+  width: 120px;
+}
+
+.firstKeyL4 {
+  width: 130px;
+}
+.lastKeyL4 {
+  width: 150px;
+}
