@@ -7,10 +7,12 @@ import layoutSvg from '@/assets/layout.svg?raw'
 import { drawActiveKeys, drawLayout, initDraw } from '@/features/preview-layout'
 import { mainStore } from '@/store'
 import Alpine from 'alpinejs'
+import focus from '@alpinejs/focus'
 import { editKeysUtilities } from './features/edit-key'
-import { initFileManagement } from './features/manage-file'
 
 Alpine.store('main', mainStore)
+
+Alpine.plugin(focus)
 
 for (const [name, func] of Object.entries(editKeysUtilities)) {
   Alpine.magic(name, () => func)
@@ -25,5 +27,3 @@ Alpine.effect(() => {
   drawLayout(draw, store.content.layout, store.previewMode)
   drawActiveKeys(draw, store.editKeys)
 })
-
-initFileManagement()
