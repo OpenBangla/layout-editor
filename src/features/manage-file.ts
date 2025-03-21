@@ -37,7 +37,7 @@ export const saveJSONFile = async ({
   draw.addClass('interactive-mode')
   drawLayout(draw, content.layout, previewMode)
   const blob = new Blob([stringify(content, { space: '  ' }) || ''], {
-    type: 'application/json;charset=utf-8',
+    type: 'application/json',
   })
   fileSave(blob, {
     fileName: `${storeContent.info.layout.name || 'Untitled'}.json`,
