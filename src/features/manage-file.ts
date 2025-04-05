@@ -5,16 +5,14 @@ import National_Jatiya from '@/assets/layouts/National_Jatiya.json'
 import Probhat from '@/assets/layouts/Probhat.json'
 import { initialLayout } from '@/layout'
 import { draw } from '@/main'
-import { convert_svg } from '@/rust-functions'
+// import { convert_svg } from '@/rust-functions'
 import { mainStore } from '@/store'
-import { message, open, save } from '@tauri-apps/api/dialog'
-import { listen } from '@tauri-apps/api/event'
-import { readTextFile, writeTextFile } from '@tauri-apps/api/fs'
-import { dataDir, join } from '@tauri-apps/api/path'
 import Alpine from 'alpinejs'
 import hotkeys from 'hotkeys-js'
 import stringify from 'json-stable-stringify'
 import { drawLayout } from './preview-layout'
+import { fileOpen, fileSave } from 'browser-fs-access'
+import { convertSVG } from './convert-svg'
 
 const exampleLayouts = {
   Avro_Easy,
@@ -28,83 +26,47 @@ export const saveJSONFile = async ({
   content: storeContent,
   previewMode,
 }: typeof mainStore) => {
-  const filePath = await save({
-    title: 'Save JSON file',
-    defaultPath: await join(
-      await dataDir(),
-      'openbangla-keyboard',
-      'layouts',
-      `${storeContent.info.layout.name || 'Untitled'}.json`
-    ),
-    filters: [
-      {
-        name: 'OpenBangla Keyboard Layout',
-        extensions: ['json'],
-      },
-    ],
+  const content = structuredClone(
+    Alpine.raw(storeContent),
+  ) as typeof storeContent
+  draw.removeClass('interactive-mode')
+  drawLayout(draw, content.layout, 'Normal')
+  content.info.layout.image0 = await convertSVG(draw.svg(true))
+  drawLayout(draw, content.layout, 'AltGr')
+  content.info.layout.image1 = await convertSVG(draw.svg(true))
+  draw.addClass('interactive-mode')
+  drawLayout(draw, content.layout, previewMode)
+  const blob = new Blob([stringify(content, { space: '  ' }) || ''], {
+    type: 'application/json',
   })
-  if (filePath) {
-    if (!filePath.endsWith('.json')) {
-      await message('Filename must end with .json', {
-        title: 'Save JSON file',
-        type: 'error',
-      })
-      saveJSONFile(Alpine.store('main') as typeof mainStore)
-      return
-    }
-
-    const content = structuredClone(
-      Alpine.raw(storeContent)
-    ) as typeof storeContent
-
-    draw.removeClass('interactive-mode')
-    drawLayout(draw, content.layout, 'Normal')
-    content.info.layout.image0 = await convert_svg(draw.svg(true))
-    drawLayout(draw, content.layout, 'AltGr')
-    content.info.layout.image1 = await convert_svg(draw.svg(true))
-    draw.addClass('interactive-mode')
-    drawLayout(draw, content.layout, previewMode)
-
-    await writeTextFile(filePath, stringify(content, { space: '  ' }))
-  }
+  fileSave(blob, {
+    fileName: `${storeContent.info.layout.name || 'Untitled'}.json`,
+    extensions: ['.json'],
+  })
 }
 
-export const initFileManagement = () => {
+export const handleMenuAction = async (payload: string) => {
   const store = Alpine.store('main') as typeof mainStore
-  listen<string>('menuitem_click', async (event) => {
-    switch (event.payload) {
-      case 'new':
-        store.content = structuredClone(initialLayout)
-        break
-      case 'Avro_Easy':
-      case 'Borno':
-      case 'Munir_Optima':
-      case 'National_Jatiya':
-      case 'Probhat':
-        store.content = structuredClone(exampleLayouts[event.payload])
-        break
-      case 'open':
-        const selected = await open({
-          defaultPath: await join(
-            await dataDir(),
-            'openbangla-keyboard',
-            'layouts'
-          ),
-          filters: [
-            {
-              name: 'OpenBangla Keyboard Layout',
-              extensions: ['json'],
-            },
-          ],
-        })
-        if (typeof selected === 'string') {
-          store.content = JSON.parse(await readTextFile(selected))
-        }
-        break
-      case 'save-as':
-        saveJSONFile(store)
-    }
-  })
+  switch (payload) {
+    case 'new':
+      store.content = structuredClone(initialLayout)
+      break
+    case 'Avro_Easy':
+    case 'Borno':
+    case 'Munir_Optima':
+    case 'National_Jatiya':
+    case 'Probhat':
+      store.content = structuredClone(exampleLayouts[payload])
+      break
+    case 'open':
+      const blob = await fileOpen({
+        mimeTypes: ['application/json'],
+      })
+      store.content = JSON.parse(await blob.text())
+      break
+    case 'save-as':
+      saveJSONFile(store)
+  }
   hotkeys('ctrl+s', function (event) {
     event.preventDefault()
     saveJSONFile(store)

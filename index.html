@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,6 +11,92 @@
     <main
       class="mx-auto flex min-h-screen max-w-[calc(400vh/3)] flex-col gap-2 bg-gray-200 p-2 font-serif"
     >
+      <div class="flex gap-2">
+        <div
+          x-data="{ isOpened: false, openedWithKeyboard: false }"
+          x-on:keydown.esc.window="isOpened = false, openedWithKeyboard = false"
+          class="relative w-fit"
+        >
+          <!-- Toggle Button -->
+          <button
+            type="button"
+            x-on:click="isOpened = ! isOpened"
+            x-on:keydown.space.prevent="openedWithKeyboard = true"
+            x-on:keydown.enter.prevent="openedWithKeyboard = true"
+            x-on:keydown.down.prevent="openedWithKeyboard = true"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+            x-bind:class="isOpened || openedWithKeyboard ? 'text-neutral-900 dark:text-white' : 'text-neutral-600 dark:text-neutral-300'"
+            x-bind:aria-expanded="isOpened || openedWithKeyboard"
+            aria-haspopup="true"
+          >
+            New
+            <svg
+              aria-hidden="true"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="h-4 w-4 rotate-0"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+          <!-- Dropdown Menu -->
+          <div
+            x-cloak
+            x-show="isOpened || openedWithKeyboard"
+            x-transition
+            x-trap="openedWithKeyboard"
+            x-on:click.outside="isOpened = false, openedWithKeyboard = false"
+            x-on:keydown.down.prevent="$focus.wrap().next()"
+            x-on:keydown.up.prevent="$focus.wrap().previous()"
+            class="absolute top-11 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-sm border border-neutral-300 bg-neutral-50 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-900"
+            role="menu"
+          >
+            <div class="flex flex-col py-1.5">
+              <button
+                class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                role="menuitem"
+                @click="$store.main.handleMenuAction('new')"
+              >
+                Blank
+              </button>
+            </div>
+            <div class="flex flex-col py-1.5">
+              <div class="px-4 py-1 text-xs text-neutral-400">
+                From examples
+              </div>
+              <template x-for="example in $store.main.examples">
+                <button
+                  class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                  role="menuitem"
+                  x-text="example.label"
+                  @click="$store.main.handleMenuAction(example.key)"
+                ></button>
+              </template>
+            </div>
+          </div>
+        </div>
+        <button
+          x-data
+          @click="$store.main.handleMenuAction('open')"
+          class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+        >
+          Open
+        </button>
+        <button
+          x-data
+          @click="$store.main.handleMenuAction('save-as')"
+          class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+        >
+          Save
+        </button>
+      </div>
       <div id="kb-layout">
         <svg width="900px" height="300px" class="block h-auto w-full"></svg>
       </div>
