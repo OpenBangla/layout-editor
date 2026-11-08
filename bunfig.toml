@@ -1,0 +1,3 @@
+[run]
+# Run package scripts (vite, tsc) with the Bun runtime instead of Node
+bun = true

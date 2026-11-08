@@ -6,22 +6,24 @@ Utility to create/edit OpenBangla Keyboard layout files.
 
 ## Development
 
+Requires [Bun](https://bun.sh).
+
 ### Install dependencies
 
 ```sh
-pnpm install
+bun install
 ```
 
 ### Start dev server
 
 ```sh
-pnpm dev
+bun run dev
 ```
 
 ### Build
 
 ```sh
-pnpm build
+bun run build
 ```
 
 The static site is output to `dist/`. Every push to `main` deploys it to GitHub Pages via `.github/workflows/gh.page.yml`.

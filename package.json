@@ -38,9 +38,7 @@
     "json-stable-stringify": "^1.2.1",
     "svg2png-wasm": "^1.4.1"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
-  }
+  "trustedDependencies": [
+    "esbuild"
+  ]
 }
