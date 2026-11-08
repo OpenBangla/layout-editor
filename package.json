@@ -36,7 +36,6 @@
     "browser-fs-access": "^0.35.0",
     "hotkeys-js": "^3.13.9",
     "json-stable-stringify": "^1.2.1",
-    "remove": "^0.1.5",
     "svg2png-wasm": "^1.4.1"
   },
   "pnpm": {

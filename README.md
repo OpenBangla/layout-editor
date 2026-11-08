@@ -6,10 +6,6 @@ Utility to create/edit OpenBangla Keyboard layout files.
 
 ## Development
 
-### Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-
 ### Install dependencies
 
 ```sh
@@ -19,8 +15,16 @@ pnpm install
 ### Start dev server
 
 ```sh
-pnpm tauri dev
+pnpm dev
 ```
+
+### Build
+
+```sh
+pnpm build
+```
+
+The static site is output to `dist/`. Every push to `main` deploys it to GitHub Pages via `.github/workflows/gh.page.yml`.
 
 ## License
 
