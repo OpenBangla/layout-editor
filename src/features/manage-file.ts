@@ -3,14 +3,11 @@ import Borno from '@/assets/layouts/Borno.json'
 import Munir_Optima from '@/assets/layouts/Munir_Optima.json'
 import National_Jatiya from '@/assets/layouts/National_Jatiya.json'
 import Probhat from '@/assets/layouts/Probhat.json'
-import { initialLayout } from '@/layout'
-import { draw } from '@/main'
+import { Layout, initialLayout } from '@/layout'
 import { mainStore } from '@/store'
 import Alpine from 'alpinejs'
 import stringify from 'json-stable-stringify'
-import { drawLayout } from './preview-layout'
 import { fileOpen, fileSave } from 'browser-fs-access'
-import { convertSVG } from './convert-svg'
 
 const exampleLayouts = {
   Avro_Easy,
@@ -20,23 +17,28 @@ const exampleLayouts = {
   Probhat,
 }
 
+/**
+ * Brings an opened layout file to format version 3. Version 3 fixed layouts
+ * no longer carry the Normal/AltGr images (OBK draws them from the key map),
+ * and transliteration layouts have no key map to edit.
+ */
+const normalizeLayout = (content: any): Layout => {
+  const type = content?.info?.type
+  if (type !== 'fixed' || typeof content?.layout !== 'object')
+    throw new Error('Only fixed keyboard layouts can be edited.')
+  const version = String(content.info.version)
+  if (version !== '2' && version !== '3')
+    throw new Error(`Unsupported layout format version: ${version}`)
+  delete content.info.layout?.image0
+  delete content.info.layout?.image1
+  content.info.version = '3'
+  return content
+}
+
 export const saveJSONFile = async ({
   content: storeContent,
-  previewMode,
 }: typeof mainStore) => {
-  const content = structuredClone(
-    Alpine.raw(storeContent),
-  ) as typeof storeContent
-  draw.removeClass('interactive-mode')
-  try {
-    drawLayout(draw, content.layout, 'Normal')
-    content.info.layout.image0 = await convertSVG(draw.svg(true))
-    drawLayout(draw, content.layout, 'AltGr')
-    content.info.layout.image1 = await convertSVG(draw.svg(true))
-  } finally {
-    draw.addClass('interactive-mode')
-    drawLayout(draw, content.layout, previewMode)
-  }
+  const content = Alpine.raw(storeContent)
   const blob = new Blob([stringify(content, { space: '  ' }) || ''], {
     type: 'application/json',
   })
@@ -67,7 +69,7 @@ export const handleMenuAction = async (payload: string) => {
         const blob = await fileOpen({
           mimeTypes: ['application/json'],
         })
-        store.content = JSON.parse(await blob.text())
+        store.content = normalizeLayout(JSON.parse(await blob.text()))
       } catch (error) {
         if (!isAbortError(error))
           alert(`Failed to open file: ${(error as Error).message ?? error}`)
