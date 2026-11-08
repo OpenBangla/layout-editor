@@ -50,6 +50,7 @@ export const drawLayout = (
       const key = `Key_${label.data('key')}_${mode}`
       if (!isValidKey(key)) return
       const ch = layout[key]
+      label.clear()
       if (joiners.has(ch)) label.tspan(joiners.get(ch)!).addClass('joiner')
       else if (twoPartKars.has(ch)) label.tspan(ch).dx(-2)
       else label.plain(ch === initialLayout.layout[key] ? '' : ch)

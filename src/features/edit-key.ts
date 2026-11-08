@@ -19,6 +19,13 @@ export const editKeysUtilities = {
     return x.charAt(0).toUpperCase() + x.substring(1)
   },
 
+  getUnicode: (str: string) =>
+    Array.from(
+      str ?? '',
+      (ch) =>
+        `U+${ch.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')}`,
+    ).join(' '),
+
   getEditKeyVariants: (editKeys: string) => {
     const [normalKey, shiftKey] = editKeys.split(' ')
     return [

@@ -1,5 +1,26 @@
 <svg id="qwerty-layout" class="interactive-mode" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 600 200"
   width="900px" height="300px">
+  <defs>
+    <filter id="key-shadow" x="-0.5" y="-0.5" width="2" height="2">
+      <feDropShadow dx="0.5" dy="1" stdDeviation="1" flood-opacity="0.3" />
+    </filter>
+    <linearGradient id="key-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f0f0f0" />
+    </linearGradient>
+    <linearGradient id="alt-gr-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8f4ff" />
+      <stop offset="100%" stop-color="#d0e8ff" />
+    </linearGradient>
+    <linearGradient id="active-key-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffff0" />
+      <stop offset="100%" stop-color="#ffffc0" />
+    </linearGradient>
+    <linearGradient id="hover-key-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0fff0" />
+      <stop offset="100%" stop-color="#d0ffd0" />
+    </linearGradient>
+  </defs>
   <style>
     svg#qwerty-layout {
       display: block;
@@ -7,17 +28,29 @@
       height: auto;
     }
 
+    svg.interactive-mode#qwerty-layout rect {
+      filter: url(#key-shadow);
+      stroke: #c0c0c0;
+    }
+
+    svg.interactive-mode#qwerty-layout g#other-keys>rect {
+      fill: #e8e8e8;
+    }
+
     svg.interactive-mode#qwerty-layout g#editable-keys>rect {
       cursor: pointer;
       transition: fill 300ms;
+      fill: url(#key-gradient);
     }
 
     svg.interactive-mode#qwerty-layout g#editable-keys>rect:hover {
-      fill: #dbffe7;
+      fill: url(#hover-key-gradient);
+      stroke: #a0d0a0;
     }
 
     svg.interactive-mode#qwerty-layout g#editable-keys>rect.active {
-      fill: #ffffd6;
+      fill: url(#active-key-gradient);
+      stroke: #d0d080;
     }
 
     svg.interactive-mode#qwerty-layout text {
@@ -29,79 +62,81 @@
     }
 
     svg.interactive-mode#qwerty-layout #alt-gr-key {
-      fill: #eceff1;
+      cursor: pointer;
+      fill: url(#key-gradient);
     }
 
     svg.alt-gr-mode#qwerty-layout #alt-gr-key,
     svg.interactive-mode#qwerty-layout #alt-gr-key:hover {
-      fill: #dbedff;
+      fill: url(#alt-gr-gradient);
+      stroke: #a0a0d0;
     }
   </style>
   <g stroke="#000000">
     <g id="other-keys" fill="#cfd8dc">
-      <rect width="80" height="40" x="520" y="0"></rect>
-      <rect width="60" height="40" x="0" y="40"></rect>
-      <rect width="70" height="40" x="0" y="80"></rect>
-      <rect width="90" height="40" x="510" y="80"></rect>
-      <rect width="90" height="40" x="0" y="120"></rect>
-      <rect width="110" height="40" x="490" y="120"></rect>
-      <rect width="60" height="40" x="0" y="160"></rect>
-      <rect width="40" height="40" x="60" y="160"></rect>
-      <rect width="60" height="40" x="100" y="160"></rect>
-      <rect width="240" height="40" x="160" y="160"></rect>
-      <rect width="60" height="40" x="400" y="160" id="alt-gr-key"></rect>
-      <rect width="40" height="40" x="460" y="160"></rect>
-      <rect width="40" height="40" x="500" y="160"></rect>
-      <rect width="60" height="40" x="540" y="160"></rect>
+      <rect width="80" height="40" x="520" y="0" rx="5"></rect>
+      <rect width="60" height="40" x="0" y="40" rx="5"></rect>
+      <rect width="70" height="40" x="0" y="80" rx="5"></rect>
+      <rect width="90" height="40" x="510" y="80" rx="5"></rect>
+      <rect width="90" height="40" x="0" y="120" rx="5"></rect>
+      <rect width="110" height="40" x="490" y="120" rx="5"></rect>
+      <rect width="60" height="40" x="0" y="160" rx="5"></rect>
+      <rect width="40" height="40" x="60" y="160" rx="5"></rect>
+      <rect width="60" height="40" x="100" y="160" rx="5"></rect>
+      <rect width="240" height="40" x="160" y="160" rx="5"></rect>
+      <rect width="60" height="40" x="400" y="160" id="alt-gr-key" rx="5"></rect>
+      <rect width="40" height="40" x="460" y="160" rx="5"></rect>
+      <rect width="40" height="40" x="500" y="160" rx="5"></rect>
+      <rect width="60" height="40" x="540" y="160" rx="5"></rect>
     </g>
     <g id="editable-keys" fill="#eceff1">
-      <rect width="40" height="40" x="0" y="0" data-keys="Grave Tilde"></rect>
-      <rect width="40" height="40" x="40" y="0" data-keys="1 Exclaim"></rect>
-      <rect width="40" height="40" x="80" y="0" data-keys="2 At"></rect>
-      <rect width="40" height="40" x="120" y="0" data-keys="3 Hash"></rect>
-      <rect width="40" height="40" x="160" y="0" data-keys="4 Dollar"></rect>
-      <rect width="40" height="40" x="200" y="0" data-keys="5 Percent"></rect>
-      <rect width="40" height="40" x="240" y="0" data-keys="6 Circum"></rect>
-      <rect width="40" height="40" x="280" y="0" data-keys="7 Ampersand"></rect>
-      <rect width="40" height="40" x="320" y="0" data-keys="8 Asterisk"></rect>
-      <rect width="40" height="40" x="360" y="0" data-keys="9 ParenLeft"></rect>
-      <rect width="40" height="40" x="400" y="0" data-keys="0 ParenRight"></rect>
-      <rect width="40" height="40" x="440" y="0" data-keys="Minus UnderScore"></rect>
-      <rect width="40" height="40" x="480" y="0" data-keys="Equals Plus"></rect>
-      <rect width="40" height="40" x="60" y="40" data-keys="q Q"></rect>
-      <rect width="40" height="40" x="100" y="40" data-keys="w W"></rect>
-      <rect width="40" height="40" x="140" y="40" data-keys="e E"></rect>
-      <rect width="40" height="40" x="180" y="40" data-keys="r R"></rect>
-      <rect width="40" height="40" x="220" y="40" data-keys="t T"></rect>
-      <rect width="40" height="40" x="260" y="40" data-keys="y Y"></rect>
-      <rect width="40" height="40" x="300" y="40" data-keys="u U"></rect>
-      <rect width="40" height="40" x="340" y="40" data-keys="i I"></rect>
-      <rect width="40" height="40" x="380" y="40" data-keys="o O"></rect>
-      <rect width="40" height="40" x="420" y="40" data-keys="p P"></rect>
-      <rect width="40" height="40" x="460" y="40" data-keys="BracketLeft BraceLeft"></rect>
-      <rect width="40" height="40" x="500" y="40" data-keys="BracketRight BraceRight"></rect>
-      <rect width="60" height="40" x="540" y="40" data-keys="BackSlash Bar"></rect>
-      <rect width="40" height="40" x="70" y="80" data-keys="a A"></rect>
-      <rect width="40" height="40" x="110" y="80" data-keys="s S"></rect>
-      <rect width="40" height="40" x="150" y="80" data-keys="d D"></rect>
-      <rect width="40" height="40" x="190" y="80" data-keys="f F"></rect>
-      <rect width="40" height="40" x="230" y="80" data-keys="g G"></rect>
-      <rect width="40" height="40" x="270" y="80" data-keys="h H"></rect>
-      <rect width="40" height="40" x="310" y="80" data-keys="j J"></rect>
-      <rect width="40" height="40" x="350" y="80" data-keys="k K"></rect>
-      <rect width="40" height="40" x="390" y="80" data-keys="l L"></rect>
-      <rect width="40" height="40" x="430" y="80" data-keys="Semicolon Colon"></rect>
-      <rect width="40" height="40" x="470" y="80" data-keys="Apostrophe Quote"></rect>
-      <rect width="40" height="40" x="90" y="120" data-keys="z Z"></rect>
-      <rect width="40" height="40" x="130" y="120" data-keys="x X"></rect>
-      <rect width="40" height="40" x="170" y="120" data-keys="c C"></rect>
-      <rect width="40" height="40" x="210" y="120" data-keys="v V"></rect>
-      <rect width="40" height="40" x="250" y="120" data-keys="b B"></rect>
-      <rect width="40" height="40" x="290" y="120" data-keys="n N"></rect>
-      <rect width="40" height="40" x="330" y="120" data-keys="m M"></rect>
-      <rect width="40" height="40" x="370" y="120" data-keys="Comma Less"></rect>
-      <rect width="40" height="40" x="410" y="120" data-keys="Period Greater"></rect>
-      <rect width="40" height="40" x="450" y="120" data-keys="Slash Question"></rect>
+      <rect width="40" height="40" x="0" y="0" data-keys="Grave Tilde" rx="5"></rect>
+      <rect width="40" height="40" x="40" y="0" data-keys="1 Exclaim" rx="5"></rect>
+      <rect width="40" height="40" x="80" y="0" data-keys="2 At" rx="5"></rect>
+      <rect width="40" height="40" x="120" y="0" data-keys="3 Hash" rx="5"></rect>
+      <rect width="40" height="40" x="160" y="0" data-keys="4 Dollar" rx="5"></rect>
+      <rect width="40" height="40" x="200" y="0" data-keys="5 Percent" rx="5"></rect>
+      <rect width="40" height="40" x="240" y="0" data-keys="6 Circum" rx="5"></rect>
+      <rect width="40" height="40" x="280" y="0" data-keys="7 Ampersand" rx="5"></rect>
+      <rect width="40" height="40" x="320" y="0" data-keys="8 Asterisk" rx="5"></rect>
+      <rect width="40" height="40" x="360" y="0" data-keys="9 ParenLeft" rx="5"></rect>
+      <rect width="40" height="40" x="400" y="0" data-keys="0 ParenRight" rx="5"></rect>
+      <rect width="40" height="40" x="440" y="0" data-keys="Minus UnderScore" rx="5"></rect>
+      <rect width="40" height="40" x="480" y="0" data-keys="Equals Plus" rx="5"></rect>
+      <rect width="40" height="40" x="60" y="40" data-keys="q Q" rx="5"></rect>
+      <rect width="40" height="40" x="100" y="40" data-keys="w W" rx="5"></rect>
+      <rect width="40" height="40" x="140" y="40" data-keys="e E" rx="5"></rect>
+      <rect width="40" height="40" x="180" y="40" data-keys="r R" rx="5"></rect>
+      <rect width="40" height="40" x="220" y="40" data-keys="t T" rx="5"></rect>
+      <rect width="40" height="40" x="260" y="40" data-keys="y Y" rx="5"></rect>
+      <rect width="40" height="40" x="300" y="40" data-keys="u U" rx="5"></rect>
+      <rect width="40" height="40" x="340" y="40" data-keys="i I" rx="5"></rect>
+      <rect width="40" height="40" x="380" y="40" data-keys="o O" rx="5"></rect>
+      <rect width="40" height="40" x="420" y="40" data-keys="p P" rx="5"></rect>
+      <rect width="40" height="40" x="460" y="40" data-keys="BracketLeft BraceLeft" rx="5"></rect>
+      <rect width="40" height="40" x="500" y="40" data-keys="BracketRight BraceRight" rx="5"></rect>
+      <rect width="60" height="40" x="540" y="40" data-keys="BackSlash Bar" rx="5"></rect>
+      <rect width="40" height="40" x="70" y="80" data-keys="a A" rx="5"></rect>
+      <rect width="40" height="40" x="110" y="80" data-keys="s S" rx="5"></rect>
+      <rect width="40" height="40" x="150" y="80" data-keys="d D" rx="5"></rect>
+      <rect width="40" height="40" x="190" y="80" data-keys="f F" rx="5"></rect>
+      <rect width="40" height="40" x="230" y="80" data-keys="g G" rx="5"></rect>
+      <rect width="40" height="40" x="270" y="80" data-keys="h H" rx="5"></rect>
+      <rect width="40" height="40" x="310" y="80" data-keys="j J" rx="5"></rect>
+      <rect width="40" height="40" x="350" y="80" data-keys="k K" rx="5"></rect>
+      <rect width="40" height="40" x="390" y="80" data-keys="l L" rx="5"></rect>
+      <rect width="40" height="40" x="430" y="80" data-keys="Semicolon Colon" rx="5"></rect>
+      <rect width="40" height="40" x="470" y="80" data-keys="Apostrophe Quote" rx="5"></rect>
+      <rect width="40" height="40" x="90" y="120" data-keys="z Z" rx="5"></rect>
+      <rect width="40" height="40" x="130" y="120" data-keys="x X" rx="5"></rect>
+      <rect width="40" height="40" x="170" y="120" data-keys="c C" rx="5"></rect>
+      <rect width="40" height="40" x="210" y="120" data-keys="v V" rx="5"></rect>
+      <rect width="40" height="40" x="250" y="120" data-keys="b B" rx="5"></rect>
+      <rect width="40" height="40" x="290" y="120" data-keys="n N" rx="5"></rect>
+      <rect width="40" height="40" x="330" y="120" data-keys="m M" rx="5"></rect>
+      <rect width="40" height="40" x="370" y="120" data-keys="Comma Less" rx="5"></rect>
+      <rect width="40" height="40" x="410" y="120" data-keys="Period Greater" rx="5"></rect>
+      <rect width="40" height="40" x="450" y="120" data-keys="Slash Question" rx="5"></rect>
     </g>
   </g>
   <g text-anchor="middle" font-size="12" font-family="Kalpurush, serif">

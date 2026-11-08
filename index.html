@@ -7,11 +7,12 @@
     <script type="module" src="/src/main.ts" defer></script>
   </head>
 
-  <body>
+  <body class="bg-gray-100">
     <main
-      class="mx-auto flex min-h-screen max-w-[calc(400vh/3)] flex-col gap-2 bg-gray-200 p-2 font-serif"
+      class="mx-auto flex min-h-screen max-w-screen-2xl flex-col gap-2 p-2 font-serif"
     >
-      <div class="flex gap-2">
+      <!-- Toolbar -->
+      <div class="flex flex-wrap items-center gap-2 rounded bg-gray-200 p-2">
         <div
           x-data="{ isOpened: false, openedWithKeyboard: false }"
           x-on:keydown.esc.window="isOpened = false, openedWithKeyboard = false"
@@ -24,8 +25,7 @@
             x-on:keydown.space.prevent="openedWithKeyboard = true"
             x-on:keydown.enter.prevent="openedWithKeyboard = true"
             x-on:keydown.down.prevent="openedWithKeyboard = true"
-            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
-            x-bind:class="isOpened || openedWithKeyboard ? 'text-neutral-900 dark:text-white' : 'text-neutral-600 dark:text-neutral-300'"
+            class="btn"
             x-bind:aria-expanded="isOpened || openedWithKeyboard"
             aria-haspopup="true"
           >
@@ -55,14 +55,14 @@
             x-on:click.outside="isOpened = false, openedWithKeyboard = false"
             x-on:keydown.down.prevent="$focus.wrap().next()"
             x-on:keydown.up.prevent="$focus.wrap().previous()"
-            class="absolute top-11 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-sm border border-neutral-300 bg-neutral-50 dark:divide-neutral-700 dark:border-neutral-700 dark:bg-neutral-900"
+            class="absolute top-11 z-50 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-sm border border-neutral-300 bg-neutral-50 font-sans shadow-lg"
             role="menu"
           >
             <div class="flex flex-col py-1.5">
               <button
-                class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900"
                 role="menuitem"
-                @click="$store.main.handleMenuAction('new')"
+                @click="$store.main.handleMenuAction('new'); isOpened = false, openedWithKeyboard = false"
               >
                 Blank
               </button>
@@ -73,10 +73,10 @@
               </div>
               <template x-for="example in $store.main.examples">
                 <button
-                  class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                  class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900"
                   role="menuitem"
                   x-text="example.label"
-                  @click="$store.main.handleMenuAction(example.key)"
+                  @click="$store.main.handleMenuAction(example.key); isOpened = false, openedWithKeyboard = false"
                 ></button>
               </template>
             </div>
@@ -85,96 +85,192 @@
         <button
           x-data
           @click="$store.main.handleMenuAction('open')"
-          class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+          class="btn"
         >
           Open
         </button>
         <button
           x-data
           @click="$store.main.handleMenuAction('save-as')"
-          class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+          class="btn"
         >
           Save
         </button>
+        <button
+          x-data
+          type="button"
+          title="Toggle AltGr mode (Alt+G)"
+          @click="$store.main.previewMode = $store.main.previewMode === 'Normal' ? 'AltGr' : 'Normal'"
+          class="ms-auto rounded px-3 py-1.5 font-sans text-sm transition"
+          :class="$store.main.previewMode === 'Normal' ? 'bg-gray-100 text-gray-700' : 'bg-blue-100 text-blue-800'"
+          x-text="$store.main.previewMode === 'Normal' ? 'Normal Mode' : 'AltGr Mode'"
+        ></button>
       </div>
-      <div id="kb-layout">
-        <svg width="900px" height="300px" class="block h-auto w-full"></svg>
-      </div>
-      <form
-        x-data
-        x-show="$store.main.editKeys === ''"
-        class="grid flex-grow grid-cols-3 content-start gap-2 bg-white p-5 md:grid-rows-[repeat(3,auto)1fr]"
+
+      <div
+        class="grid flex-grow grid-cols-1 content-start gap-2 lg:grid-cols-[2fr_3fr] lg:grid-rows-[auto_1fr]"
       >
-        <h2 class="col-span-full font-sans text-2xl">Edit layout info</h2>
-        <template
-          x-for="[path, cc] in [['layout.name', 'md:col-span-2'], ['layout.version', 'md:col-span-1'], ['layout.developer.name']]"
-        >
-          <div x-id="['text-input']" class="relative col-span-full" :class="cc">
-            <input
-              type="text"
-              :id="$id('text-input')"
-              class="text-input peer"
-              placeholder=" "
-              x-model="$getLastParent($store.main.content.info, path)[$getLastSegment(path)]"
-            />
-            <label
-              :for="$id('text-input')"
-              x-text="$getLabel(path)"
-              class="floating-label top-4"
-            ></label>
-          </div>
-        </template>
-        <div x-id="['text-input']" class="relative col-span-full">
-          <textarea
-            x-id="['text-input']"
-            class="text-input peer h-full"
-            placeholder=" "
-            x-model="$store.main.content.info.layout.developer.comment"
-            rows="2"
-          ></textarea>
-          <label :for="$id('text-input')" class="floating-label">
-            Developer's comment
-          </label>
+        <div id="kb-layout" class="panel p-2 lg:col-start-2">
+          <svg width="900px" height="300px" class="block h-auto w-full"></svg>
         </div>
-      </form>
-      <form
-        x-data
-        x-cloak
-        x-show="$store.main.editKeys !== ''"
-        class="flex-grow content-start bg-white p-5"
-      >
-        <h2 class="mb-2 flex items-stretch font-sans text-2xl">
-          <span class="me-auto">Edit layout key</span>
-          <button
-            type="button"
-            @click="$store.main.editKeys = ''"
-            class="rounded border border-gray-300 bg-white px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
+
+        <!-- Edit forms -->
+        <div class="panel p-5 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+          <form
+            x-data
+            x-show="$store.main.editKeys === ''"
+            class="grid grid-cols-3 content-start gap-2"
           >
-            Back to Edit layout info
-          </button>
-        </h2>
-        <div class="grid grid-cols-4 gap-2">
-          <template
-            x-for="[label, key] in $getEditKeyVariants($store.main.editKeys)"
-            :key="key"
-          >
-            <div class="relative" x-id="['text-input']">
-              <input
-                type="text"
+            <h2 class="col-span-full mb-2 font-sans text-xl">
+              Edit layout info
+            </h2>
+            <template
+              x-for="[path, cc] in [['layout.name', 'sm:col-span-2'], ['layout.version', 'sm:col-span-1'], ['layout.developer.name']]"
+            >
+              <div
+                x-id="['text-input']"
+                class="relative col-span-full"
+                :class="cc"
+              >
+                <input
+                  type="text"
+                  :id="$id('text-input')"
+                  class="text-input peer"
+                  placeholder=" "
+                  x-model="$getLastParent($store.main.content.info, path)[$getLastSegment(path)]"
+                />
+                <label
+                  :for="$id('text-input')"
+                  x-text="$getLabel(path)"
+                  class="floating-label top-4"
+                ></label>
+              </div>
+            </template>
+            <div x-id="['text-input']" class="relative col-span-full">
+              <textarea
                 :id="$id('text-input')"
                 class="text-input peer"
                 placeholder=" "
-                x-model="$store.main.content.layout[key]"
-              />
-              <label
-                :for="$id('text-input')"
-                x-text="label"
-                class="floating-label"
-              ></label>
+                x-model="$store.main.content.info.layout.developer.comment"
+                rows="5"
+              ></textarea>
+              <label :for="$id('text-input')" class="floating-label">
+                Developer's comment
+              </label>
             </div>
-          </template>
+          </form>
+
+          <form x-data x-cloak x-show="$store.main.editKeys !== ''">
+            <h2
+              class="mb-4 flex flex-wrap items-center gap-2 font-sans text-xl"
+            >
+              <span class="me-auto">Edit layout key</span>
+              <button
+                type="button"
+                @click="$store.main.editKeys = ''"
+                class="btn py-1"
+              >
+                Back to layout info
+              </button>
+            </h2>
+            <div class="grid grid-cols-2 gap-2">
+              <template
+                x-for="[label, key] in $getEditKeyVariants($store.main.editKeys)"
+                :key="key"
+              >
+                <div class="relative" x-id="['text-input']">
+                  <input
+                    type="text"
+                    :id="$id('text-input')"
+                    class="text-input peer"
+                    placeholder=" "
+                    x-model="$store.main.content.layout[key]"
+                  />
+                  <label
+                    :for="$id('text-input')"
+                    x-text="label"
+                    class="floating-label"
+                  ></label>
+                </div>
+              </template>
+            </div>
+
+            <h3 class="mb-2 mt-6 font-sans text-base font-medium">
+              Character preview
+            </h3>
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
+              <template
+                x-for="[label, key] in $getEditKeyVariants($store.main.editKeys)"
+                :key="key"
+              >
+                <div class="rounded bg-gray-50 p-3 text-center">
+                  <div
+                    class="flex h-12 items-center justify-center text-3xl"
+                    x-text="$store.main.content.layout[key] || '–'"
+                  ></div>
+                  <div
+                    class="break-words font-mono text-xs text-gray-500"
+                    x-text="$getUnicode($store.main.content.layout[key]) || '—'"
+                  ></div>
+                  <div
+                    class="mt-1 font-sans text-xs font-medium text-gray-600"
+                    x-text="label"
+                  ></div>
+                </div>
+              </template>
+            </div>
+          </form>
         </div>
-      </form>
+
+        <div
+          x-data
+          class="panel self-start p-5 font-sans text-sm lg:col-start-2"
+        >
+          <h3 class="mb-4 text-base font-medium">Layout information</h3>
+          <dl class="mb-4 grid grid-cols-[8rem_1fr] gap-y-2">
+            <dt class="text-gray-600">Layout name</dt>
+            <dd
+              class="font-serif text-gray-500"
+              x-text="$store.main.content.info.layout.name || '—'"
+            ></dd>
+            <dt class="text-gray-600">Version</dt>
+            <dd
+              class="text-gray-500"
+              x-text="$store.main.content.info.layout.version || '—'"
+            ></dd>
+            <dt class="text-gray-600">Developer</dt>
+            <dd
+              class="font-serif text-gray-500"
+              x-text="$store.main.content.info.layout.developer.name || '—'"
+            ></dd>
+            <dt class="text-gray-600">Selected key</dt>
+            <dd
+              class="text-gray-500"
+              x-text="$store.main.editKeys || 'None'"
+            ></dd>
+          </dl>
+
+          <div class="rounded bg-blue-50 p-4">
+            <div class="mb-2 font-medium text-blue-800">Keyboard shortcuts</div>
+            <ul class="list-disc space-y-1.5 ps-6">
+              <li>
+                <kbd class="key-cap">Alt+G</kbd>
+                or click Alt Gr to toggle between Normal and AltGr mode
+              </li>
+              <li>
+                <kbd class="key-cap">Ctrl+S</kbd>
+                to save,
+                <kbd class="key-cap">Ctrl+O</kbd>
+                to open
+              </li>
+              <li>
+                <kbd class="key-cap">Esc</kbd>
+                to return to layout info
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </main>
   </body>
 </html>
