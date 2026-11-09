@@ -4,6 +4,8 @@ import { handleMenuAction } from './features/manage-file'
 export const mainStore = {
   content: structuredClone(initialLayout) as Layout,
   editKeys: '',
+  // Set when a save is attempted without a layout name
+  nameRequired: false,
   previewMode: 'Normal' as 'Normal' | 'AltGr',
   examples: [
     { key: 'Avro_Easy', label: 'Avro Easy' },

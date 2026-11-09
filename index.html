@@ -108,61 +108,27 @@
       </div>
 
       <div
-        class="grid flex-grow grid-cols-1 content-start gap-2 lg:grid-cols-[2fr_3fr] lg:grid-rows-[auto_1fr]"
+        class="grid flex-grow grid-cols-1 content-start gap-2 lg:grid-cols-[2fr_3fr] lg:grid-rows-[auto_1fr_auto]"
       >
-        <div id="kb-layout" class="panel p-2 lg:col-start-2">
+        <div id="kb-layout" class="panel p-2 lg:col-start-2 lg:row-start-1">
           <svg width="900px" height="300px" class="block h-auto w-full"></svg>
         </div>
 
         <!-- Edit forms -->
-        <div class="panel p-5 lg:col-start-1 lg:row-span-2 lg:row-start-1">
-          <form
+        <div
+          class="panel flex flex-col p-5 lg:col-start-1 lg:row-span-2 lg:row-start-1"
+        >
+          <div
             x-data
             x-show="$store.main.editKeys === ''"
-            class="grid grid-cols-3 content-start gap-2"
+            class="my-auto py-6 text-center font-sans text-sm text-gray-500"
           >
-            <h2 class="col-span-full mb-2 font-sans text-xl">
-              Edit layout info
-            </h2>
-            <template
-              x-for="[path, cc] in [['layout.name', 'sm:col-span-2'], ['layout.version', 'sm:col-span-1'], ['layout.developer.name']]"
-            >
-              <div
-                x-id="['text-input']"
-                class="relative col-span-full"
-                :class="cc"
-              >
-                <input
-                  type="text"
-                  :id="$id('text-input')"
-                  class="text-input peer"
-                  placeholder=" "
-                  x-model="$getLastParent($store.main.content.info, path)[$getLastSegment(path)]"
-                />
-                <label
-                  :for="$id('text-input')"
-                  x-text="$getLabel(path)"
-                  class="floating-label top-4"
-                ></label>
-              </div>
-            </template>
-            <div x-id="['text-input']" class="relative col-span-full">
-              <textarea
-                :id="$id('text-input')"
-                class="text-input peer"
-                placeholder=" "
-                x-model="$store.main.content.info.layout.developer.comment"
-                rows="5"
-              ></textarea>
-              <label :for="$id('text-input')" class="floating-label">
-                Developer's comment
-              </label>
-            </div>
-          </form>
+            Select a key on the keyboard to edit its characters.
+          </div>
 
           <form x-data x-cloak x-show="$store.main.editKeys !== ''">
             <h2
-              class="mb-4 flex flex-wrap items-center gap-2 font-sans text-xl"
+              class="mb-3 flex flex-wrap items-center gap-2 font-sans text-xl"
             >
               <span class="me-auto">Edit layout key</span>
               <button
@@ -170,7 +136,7 @@
                 @click="$store.main.editKeys = ''"
                 class="btn py-1"
               >
-                Back to layout info
+                Done
               </button>
             </h2>
             <div class="grid grid-cols-2 gap-2">
@@ -182,7 +148,7 @@
                   <input
                     type="text"
                     :id="$id('text-input')"
-                    class="text-input peer"
+                    class="text-input peer pe-14"
                     placeholder=" "
                     x-model="$store.main.content.layout[key]"
                   />
@@ -191,26 +157,58 @@
                     x-text="label"
                     class="floating-label"
                   ></label>
+                  <!-- Inputs can't show invisible characters, so flag them -->
+                  <div
+                    class="pointer-events-none absolute inset-y-0 end-2 flex items-center gap-1"
+                  >
+                    <template
+                      x-for="seg in $splitSpecialChars($store.main.content.layout[key]).filter((s) => s.special)"
+                    >
+                      <span
+                        class="special-char"
+                        :title="seg.special.name"
+                        x-text="seg.special.short"
+                      ></span>
+                    </template>
+                  </div>
                 </div>
               </template>
             </div>
 
-            <h3 class="mb-2 mt-6 font-sans text-base font-medium">
+            <h3 class="mb-2 mt-4 font-sans text-base font-medium">
               Character preview
             </h3>
-            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
+            <div class="grid grid-cols-2 gap-2">
               <template
                 x-for="[label, key] in $getEditKeyVariants($store.main.editKeys)"
                 :key="key"
               >
-                <div class="rounded bg-gray-50 p-3 text-center">
+                <div class="rounded bg-gray-50 px-2 py-2 text-center">
+                  <!-- An empty key takes over the U+ line's height (h-10 + 1rem)
+                         so its badge is centred and the tile keeps its size -->
                   <div
-                    class="flex h-12 items-center justify-center text-3xl"
-                    x-text="$store.main.content.layout[key] || '–'"
-                  ></div>
+                    class="flex items-center justify-center gap-1 text-3xl"
+                    :class="$store.main.content.layout[key] ? 'h-10' : 'h-14'"
+                  >
+                    <template
+                      x-for="seg in $splitSpecialChars($store.main.content.layout[key])"
+                    >
+                      <span
+                        :class="seg.special && 'special-char'"
+                        :title="seg.special?.name"
+                        x-text="seg.special ? seg.special.short : seg.text"
+                      ></span>
+                    </template>
+                    <span
+                      x-show="!$store.main.content.layout[key]"
+                      class="rounded border border-dashed border-gray-300 bg-white px-1.5 font-sans text-xs leading-normal text-gray-500"
+                      >Empty</span
+                    >
+                  </div>
                   <div
                     class="break-words font-mono text-xs text-gray-500"
-                    x-text="$getUnicode($store.main.content.layout[key]) || '—'"
+                    x-show="$store.main.content.layout[key]"
+                    x-text="$getUnicode($store.main.content.layout[key])"
                   ></div>
                   <div
                     class="mt-1 font-sans text-xs font-medium text-gray-600"
@@ -222,53 +220,132 @@
           </form>
         </div>
 
+        <div x-data class="panel p-5 lg:col-start-1 lg:row-start-3">
+          <h3 class="mb-2 font-sans text-base font-medium">
+            Special characters
+          </h3>
+          <div class="grid grid-cols-2 gap-2" x-data="{ copied: '' }">
+            <template x-for="c in $getSpecialChars()" :key="c.char">
+              <button
+                type="button"
+                class="rounded border border-transparent bg-gray-50 p-3 text-start font-sans transition hover:border-gray-300 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800"
+                :title="`Copy ${c.name} to clipboard`"
+                @click="if (await $copyChar(c.char)) { copied = c.char; setTimeout(() => copied === c.char && (copied = ''), 1500) }"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <span class="special-char" x-text="c.short"></span>
+                  <span
+                    class="text-xs"
+                    :class="copied === c.char ? 'text-green-700' : 'text-gray-400'"
+                    x-text="copied === c.char ? 'Copied!' : 'Click to copy'"
+                  ></span>
+                </div>
+                <div
+                  class="mt-2 text-xs font-medium text-gray-700"
+                  x-text="c.name"
+                ></div>
+                <div
+                  class="font-mono text-xs text-gray-500"
+                  x-text="$getUnicode(c.char)"
+                ></div>
+              </button>
+            </template>
+          </div>
+        </div>
+
         <div
           x-data
-          class="panel self-start p-5 font-sans text-sm lg:col-start-2"
+          class="panel p-5 font-sans text-sm lg:col-start-2 lg:row-start-2"
         >
           <h3 class="mb-4 text-base font-medium">Layout information</h3>
-          <dl class="mb-4 grid grid-cols-[8rem_1fr] gap-y-2">
-            <dt class="text-gray-600">Layout name</dt>
+          <dl class="grid grid-cols-[8rem_1fr] items-center gap-y-1">
+            <dt class="text-gray-600">
+              <label for="info-name">
+                Layout name
+                <span class="text-red-600" aria-hidden="true">*</span>
+              </label>
+            </dt>
+            <dd>
+              <input
+                id="info-name"
+                type="text"
+                required
+                class="info-input font-serif"
+                :class="$store.main.nameRequired && !$store.main.content.info.layout.name.trim() && '!border-red-500'"
+                :aria-invalid="$store.main.nameRequired && !$store.main.content.info.layout.name.trim()"
+                aria-describedby="info-name-error"
+                placeholder="Required"
+                x-model="$store.main.content.info.layout.name"
+              />
+            </dd>
+            <!-- Own grid row that always takes up space, so showing the
+                 message doesn't shift the label or the rows below -->
             <dd
-              class="font-serif text-gray-500"
-              x-text="$store.main.content.info.layout.name || '—'"
-            ></dd>
-            <dt class="text-gray-600">Version</dt>
-            <dd
-              class="text-gray-500"
-              x-text="$store.main.content.info.layout.version || '—'"
-            ></dd>
-            <dt class="text-gray-600">Developer</dt>
-            <dd
-              class="font-serif text-gray-500"
-              x-text="$store.main.content.info.layout.developer.name || '—'"
-            ></dd>
-            <dt class="text-gray-600">Selected key</dt>
-            <dd
-              class="text-gray-500"
-              x-text="$store.main.editKeys || 'None'"
-            ></dd>
+              id="info-name-error"
+              class="invisible col-start-2 -mt-1 px-2 text-xs text-red-600"
+              :class="{ invisible: !($store.main.nameRequired && !$store.main.content.info.layout.name.trim()) }"
+            >
+              Enter a layout name before saving.
+            </dd>
+            <dt class="text-gray-600">
+              <label for="info-version">Version</label>
+            </dt>
+            <dd>
+              <input
+                id="info-version"
+                type="text"
+                class="info-input"
+                placeholder="1.0"
+                x-model="$store.main.content.info.layout.version"
+              />
+            </dd>
+            <dt class="text-gray-600">
+              <label for="info-developer">Developer</label>
+            </dt>
+            <dd>
+              <input
+                id="info-developer"
+                type="text"
+                class="info-input font-serif"
+                placeholder="Your name"
+                x-model="$store.main.content.info.layout.developer.name"
+              />
+            </dd>
+            <dt class="self-start py-1 text-gray-600">
+              <label for="info-comment">Comment</label>
+            </dt>
+            <dd>
+              <textarea
+                id="info-comment"
+                class="info-input block resize-y font-serif"
+                rows="3"
+                placeholder="About this layout"
+                x-model="$store.main.content.info.layout.developer.comment"
+              ></textarea>
+            </dd>
           </dl>
+        </div>
 
-          <div class="rounded bg-blue-50 p-4">
-            <div class="mb-2 font-medium text-blue-800">Keyboard shortcuts</div>
-            <ul class="list-disc space-y-1.5 ps-6">
-              <li>
-                <kbd class="key-cap">Alt+G</kbd>
-                or click Alt Gr to toggle between Normal and AltGr mode
-              </li>
-              <li>
-                <kbd class="key-cap">Ctrl+S</kbd>
-                to save,
-                <kbd class="key-cap">Ctrl+O</kbd>
-                to open
-              </li>
-              <li>
-                <kbd class="key-cap">Esc</kbd>
-                to return to layout info
-              </li>
-            </ul>
-          </div>
+        <div
+          class="rounded bg-blue-50 p-5 font-sans text-sm shadow-sm lg:col-start-2 lg:row-start-3"
+        >
+          <div class="mb-2 font-medium text-blue-800">Keyboard shortcuts</div>
+          <ul class="list-disc space-y-1.5 ps-6">
+            <li>
+              <kbd class="key-cap">Alt+G</kbd>
+              or click Alt Gr to toggle between Normal and AltGr mode
+            </li>
+            <li>
+              <kbd class="key-cap">Ctrl+S</kbd>
+              to save,
+              <kbd class="key-cap">Ctrl+O</kbd>
+              to open
+            </li>
+            <li>
+              <kbd class="key-cap">Esc</kbd>
+              to deselect the key
+            </li>
+          </ul>
         </div>
       </div>
     </main>

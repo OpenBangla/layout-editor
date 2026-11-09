@@ -43,7 +43,7 @@ export const saveJSONFile = async ({
     type: 'application/json',
   })
   await fileSave(blob, {
-    fileName: `${storeContent.info.layout.name || 'Untitled'}.json`,
+    fileName: `${storeContent.info.layout.name.trim()}.json`,
     extensions: ['.json'],
   })
 }
@@ -56,6 +56,7 @@ export const handleMenuAction = async (payload: string) => {
   switch (payload) {
     case 'new':
       store.content = structuredClone(initialLayout)
+      store.nameRequired = false
       break
     case 'Avro_Easy':
     case 'Borno':
@@ -76,6 +77,11 @@ export const handleMenuAction = async (payload: string) => {
       }
       break
     case 'save-as':
+      if (!store.content.info.layout.name.trim()) {
+        store.nameRequired = true
+        document.getElementById('info-name')?.focus()
+        break
+      }
       try {
         await saveJSONFile(store)
       } catch (error) {

@@ -61,15 +61,40 @@
       fill: #002fa7;
     }
 
-    svg.interactive-mode#qwerty-layout #alt-gr-key {
+    /* The AltGr key toggles AltGr mode. Selectors include #other-keys so they
+       outrank the grey fill above that marks the other, inert modifier keys. */
+    svg.interactive-mode#qwerty-layout g#other-keys>rect#alt-gr-key {
       cursor: pointer;
+      transition: fill 300ms;
       fill: url(#key-gradient);
+      stroke: #a0a0d0;
     }
 
-    svg.alt-gr-mode#qwerty-layout #alt-gr-key,
-    svg.interactive-mode#qwerty-layout #alt-gr-key:hover {
+    svg.interactive-mode#qwerty-layout g#other-keys>rect#alt-gr-key:hover {
       fill: url(#alt-gr-gradient);
-      stroke: #a0a0d0;
+      stroke: #7c7cc0;
+    }
+
+    svg.alt-gr-mode#qwerty-layout g#other-keys>rect#alt-gr-key {
+      fill: url(#alt-gr-gradient);
+      stroke: #6060b0;
+      stroke-width: 1.5;
+    }
+
+    svg.interactive-mode#qwerty-layout #alt-gr-label {
+      fill: #3b3b9a;
+      font-weight: 600;
+    }
+
+    /* Indicator light that is lit while AltGr mode is on */
+    svg#qwerty-layout #alt-gr-led {
+      pointer-events: none;
+      fill: #d0d0e8;
+      stroke: none;
+    }
+
+    svg.alt-gr-mode#qwerty-layout #alt-gr-led {
+      fill: #4f46e5;
     }
   </style>
   <g stroke="#000000">
@@ -84,7 +109,9 @@
       <rect width="40" height="40" x="60" y="160" rx="5"></rect>
       <rect width="60" height="40" x="100" y="160" rx="5"></rect>
       <rect width="240" height="40" x="160" y="160" rx="5"></rect>
-      <rect width="60" height="40" x="400" y="160" id="alt-gr-key" rx="5"></rect>
+      <rect width="60" height="40" x="400" y="160" id="alt-gr-key" rx="5">
+        <title>Toggle AltGr mode (Alt+G)</title>
+      </rect>
       <rect width="40" height="40" x="460" y="160" rx="5"></rect>
       <rect width="40" height="40" x="500" y="160" rx="5"></rect>
       <rect width="60" height="40" x="540" y="160" rx="5"></rect>
@@ -210,7 +237,7 @@
       <text dy="0.25em" x="460" y="150">/</text>
       <text dy="0.25em" x="460" y="130">?</text>
       <text dy="0.25em" x="130" y="180">Alt</text>
-      <text dy="0.25em" x="430" y="180">Alt Gr</text>
+      <text dy="0.25em" x="430" y="180" id="alt-gr-label">Alt Gr</text>
     </g>
     <g text-anchor="start">
       <text dy="0.25em" x="7" y="60">Tab</text>
@@ -321,4 +348,5 @@
       <text dy="0.25em" x="480" y="130" data-key="Question"></text>
     </g>
   </g>
+  <circle id="alt-gr-led" cx="452" cy="167" r="2.5"></circle>
 </svg>
