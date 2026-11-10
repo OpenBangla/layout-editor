@@ -222,5 +222,5 @@ export type Layout = typeof layout
 export const initialLayout = Object.freeze(layout) as Readonly<Layout>
 
 export const isValidKey = (
-  key: string
+  key: string,
 ): key is keyof typeof initialLayout.layout => key in initialLayout.layout

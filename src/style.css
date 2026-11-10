@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+/* UnoCSS's default was class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif:
+    Kalpurush, ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
+/* Keep v3-style defaults the old reset provided */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+  [x-cloak] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-xs border border-neutral-300 bg-neutral-50 px-4 py-2 font-sans text-sm font-medium tracking-wide whitespace-nowrap text-neutral-700 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800;
+  }
+  .panel {
+    @apply rounded-sm bg-white shadow-xs;
+  }
+  .key-cap {
+    @apply rounded-sm border border-gray-300 bg-gray-50 px-1 font-mono text-xs;
+  }
+  .special-char {
+    @apply inline-block rounded-sm border border-dashed border-amber-400 bg-amber-50 px-1 font-mono text-xs leading-normal text-amber-800;
+  }
+  .text-input {
+    @apply block w-full appearance-none border border-gray-300 bg-transparent px-2.5 pt-4 pb-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-0 focus:outline-hidden dark:border-gray-600 dark:text-white dark:focus:border-blue-500;
+  }
+  .info-input {
+    @apply w-full rounded-xs border border-transparent bg-transparent px-2 py-1 text-gray-700 transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-600 focus:bg-white focus:outline-hidden;
+  }
+  .floating-label {
+    @apply pointer-events-none absolute top-2 left-1 z-10 origin-[0] -translate-y-4 scale-75 bg-white px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-6 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500;
+  }
+  .last-2-child-col-span-full > div:nth-last-child(-n + 2) {
+    grid-column: 1/-1;
+  }
+}

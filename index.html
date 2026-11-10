@@ -9,10 +9,10 @@
 
   <body class="bg-gray-100">
     <main
-      class="mx-auto flex min-h-screen max-w-screen-2xl flex-col gap-2 p-2 font-serif"
+      class="mx-auto flex min-h-screen max-w-(--breakpoint-2xl) flex-col gap-2 p-2 font-serif"
     >
       <!-- Toolbar -->
-      <div class="flex flex-wrap items-center gap-2 rounded bg-gray-200 p-2">
+      <div class="flex flex-wrap items-center gap-2 rounded-sm bg-gray-200 p-2">
         <div
           x-data="{ isOpened: false, openedWithKeyboard: false }"
           x-on:keydown.esc.window="isOpened = false, openedWithKeyboard = false"
@@ -55,12 +55,12 @@
             x-on:click.outside="isOpened = false, openedWithKeyboard = false"
             x-on:keydown.down.prevent="$focus.wrap().next()"
             x-on:keydown.up.prevent="$focus.wrap().previous()"
-            class="absolute top-11 z-50 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-sm border border-neutral-300 bg-neutral-50 font-sans shadow-lg"
+            class="absolute top-11 z-50 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-xs border border-neutral-300 bg-neutral-50 font-sans shadow-lg"
             role="menu"
           >
             <div class="flex flex-col py-1.5">
               <button
-                class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900"
+                class="bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 focus-visible:outline-hidden"
                 role="menuitem"
                 @click="$store.main.handleMenuAction('new'); isOpened = false, openedWithKeyboard = false"
               >
@@ -73,7 +73,7 @@
               </div>
               <template x-for="example in $store.main.examples">
                 <button
-                  class="focus-visible:outline-hidden bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900"
+                  class="bg-neutral-50 px-4 py-2 text-start text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 focus-visible:outline-hidden"
                   role="menuitem"
                   x-text="example.label"
                   @click="$store.main.handleMenuAction(example.key); isOpened = false, openedWithKeyboard = false"
@@ -101,14 +101,14 @@
           type="button"
           title="Toggle AltGr mode (Alt+G)"
           @click="$store.main.previewMode = $store.main.previewMode === 'Normal' ? 'AltGr' : 'Normal'"
-          class="ms-auto rounded px-3 py-1.5 font-sans text-sm transition"
+          class="ms-auto rounded-sm px-3 py-1.5 font-sans text-sm transition"
           :class="$store.main.previewMode === 'Normal' ? 'bg-gray-100 text-gray-700' : 'bg-blue-100 text-blue-800'"
           x-text="$store.main.previewMode === 'Normal' ? 'Normal Mode' : 'AltGr Mode'"
         ></button>
       </div>
 
       <div
-        class="grid flex-grow grid-cols-1 content-start gap-2 lg:grid-cols-[2fr_3fr] lg:grid-rows-[auto_1fr_auto]"
+        class="grid grow grid-cols-1 content-start gap-2 lg:grid-cols-[2fr_3fr] lg:grid-rows-[auto_1fr_auto]"
       >
         <div id="kb-layout" class="panel p-2 lg:col-start-2 lg:row-start-1">
           <svg width="900px" height="300px" class="block h-auto w-full"></svg>
@@ -175,7 +175,7 @@
               </template>
             </div>
 
-            <h3 class="mb-2 mt-4 font-sans text-base font-medium">
+            <h3 class="mt-4 mb-2 font-sans text-base font-medium">
               Character preview
             </h3>
             <div class="grid grid-cols-2 gap-2">
@@ -183,7 +183,7 @@
                 x-for="[label, key] in $getEditKeyVariants($store.main.editKeys)"
                 :key="key"
               >
-                <div class="rounded bg-gray-50 px-2 py-2 text-center">
+                <div class="rounded-sm bg-gray-50 px-2 py-2 text-center">
                   <!-- An empty key takes over the U+ line's height (h-10 + 1rem)
                          so its badge is centred and the tile keeps its size -->
                   <div
@@ -201,12 +201,12 @@
                     </template>
                     <span
                       x-show="!$store.main.content.layout[key]"
-                      class="rounded border border-dashed border-gray-300 bg-white px-1.5 font-sans text-xs leading-normal text-gray-500"
+                      class="rounded-sm border border-dashed border-gray-300 bg-white px-1.5 font-sans text-xs leading-normal text-gray-500"
                       >Empty</span
                     >
                   </div>
                   <div
-                    class="break-words font-mono text-xs text-gray-500"
+                    class="font-mono text-xs break-words text-gray-500"
                     x-show="$store.main.content.layout[key]"
                     x-text="$getUnicode($store.main.content.layout[key])"
                   ></div>
@@ -228,7 +228,7 @@
             <template x-for="c in $getSpecialChars()" :key="c.char">
               <button
                 type="button"
-                class="rounded border border-transparent bg-gray-50 p-3 text-start font-sans transition hover:border-gray-300 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800"
+                class="rounded-sm border border-transparent bg-gray-50 p-3 text-start font-sans transition hover:border-gray-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800"
                 :title="`Copy ${c.name} to clipboard`"
                 @click="if (await $copyChar(c.char)) { copied = c.char; setTimeout(() => copied === c.char && (copied = ''), 1500) }"
               >
@@ -271,7 +271,7 @@
                 type="text"
                 required
                 class="info-input font-serif"
-                :class="$store.main.nameRequired && !$store.main.content.info.layout.name.trim() && '!border-red-500'"
+                :class="$store.main.nameRequired && !$store.main.content.info.layout.name.trim() && 'border-red-500!'"
                 :aria-invalid="$store.main.nameRequired && !$store.main.content.info.layout.name.trim()"
                 aria-describedby="info-name-error"
                 placeholder="Required"
@@ -327,7 +327,7 @@
         </div>
 
         <div
-          class="rounded bg-blue-50 p-5 font-sans text-sm shadow-sm lg:col-start-2 lg:row-start-3"
+          class="rounded-sm bg-blue-50 p-5 font-sans text-sm shadow-xs lg:col-start-2 lg:row-start-3"
         >
           <div class="mb-2 font-medium text-blue-800">Keyboard shortcuts</div>
           <ul class="list-disc space-y-1.5 ps-6">
