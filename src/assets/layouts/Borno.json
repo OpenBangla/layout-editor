@@ -5,13 +5,11 @@
         "comment": "The original layout was designed by 'The Safeworks', in 1996-1998.\r\n\r\nOmicronLab redesigned this layout a bit to enable UNICODE support.\r\n\nThis layout is imported from Avro Keyboard.\n",
         "name": "The Safeworks"
       },
-      "image0": "",
-      "image1": "",
       "name": "Borno",
       "version": "1"
     },
     "type": "fixed",
-    "version": "2"
+    "version": "3"
   },
   "layout": {
     "Key_0_AltGr": "",

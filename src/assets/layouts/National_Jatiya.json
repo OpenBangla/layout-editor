@@ -5,13 +5,11 @@
         "comment": "Bangla Jatiyo Keyboard or National Keyboard layout developed by Bangladesh Computer Council, is currently the most popular layout and is addressed as the standard layout.",
         "name": "Bangladesh Computer Council (BCC)"
       },
-      "image0": "",
-      "image1": "",
       "name": "National (Jatiya)",
       "version": "2"
     },
     "type": "fixed",
-    "version": "2"
+    "version": "3"
   },
   "layout": {
     "Key_0_AltGr": "৹",

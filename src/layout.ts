@@ -5,13 +5,11 @@ const layout = {
         comment: '',
         name: '',
       },
-      image0: '',
-      image1: '',
       name: '',
       version: '',
     },
     type: 'fixed',
-    version: '2',
+    version: '3',
   },
   layout: {
     Key_0_AltGr: '',
@@ -224,5 +222,5 @@ export type Layout = typeof layout
 export const initialLayout = Object.freeze(layout) as Readonly<Layout>
 
 export const isValidKey = (
-  key: string
+  key: string,
 ): key is keyof typeof initialLayout.layout => key in initialLayout.layout

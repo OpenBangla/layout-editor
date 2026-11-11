@@ -5,13 +5,11 @@
         "comment": "A version of Munir Optima Keyboard for Unicode. Suggested by Ekhushey.Org\n\nThis layout is imported from Avro Keyboard.\n",
         "name": "Shabab Mustafa "
       },
-      "image0": "",
-      "image1": "",
       "name": "Munir Optima",
       "version": "1.0"
     },
     "type": "fixed",
-    "version": "2"
+    "version": "3"
   },
   "layout": {
     "Key_0_AltGr": "৹",

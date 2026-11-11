@@ -2,6 +2,7 @@ import { initialLayout, isValidKey } from '@/layout'
 import type { mainStore } from '@/store'
 import { SVG, Svg, Text } from '@svgdotjs/svg.js'
 import Alpine from 'alpinejs'
+import { specialChars } from './edit-key'
 
 export const initDraw = (layoutSvg: string) => {
   const SVGContainer = document.querySelector('div#kb-layout')!
@@ -16,8 +17,8 @@ export const initDraw = (layoutSvg: string) => {
       key.click(
         () =>
           (store.editKeys =
-            store.editKeys !== key.data('keys') ? key.data('keys') : '')
-      )
+            store.editKeys !== key.data('keys') ? key.data('keys') : ''),
+      ),
     )
   draw
     .find('rect#alt-gr-key')
@@ -25,23 +26,20 @@ export const initDraw = (layoutSvg: string) => {
       key.click(
         () =>
           (store.previewMode =
-            store.previewMode === 'Normal' ? 'AltGr' : 'Normal')
-      )
+            store.previewMode === 'Normal' ? 'AltGr' : 'Normal'),
+      ),
     )
 
   return draw
 }
 
-const joiners = new Map([
-    ['\u{200D}', 'J'],
-    ['\u{200C}', 'NJ'],
-  ]),
+const joiners = new Map(specialChars.map((c) => [c.char, c.keycap])),
   twoPartKars = new Set(['\u{09CB}', '\u{09CC}'])
 
 export const drawLayout = (
   draw: Svg,
   layout: typeof initialLayout.layout,
-  mode: 'Normal' | 'AltGr' = 'Normal'
+  mode: 'Normal' | 'AltGr' = 'Normal',
 ) =>
   draw[mode === 'AltGr' ? 'addClass' : 'removeClass']('alt-gr-mode')
     .find('#key-labels text')
@@ -50,6 +48,7 @@ export const drawLayout = (
       const key = `Key_${label.data('key')}_${mode}`
       if (!isValidKey(key)) return
       const ch = layout[key]
+      label.clear()
       if (joiners.has(ch)) label.tspan(joiners.get(ch)!).addClass('joiner')
       else if (twoPartKars.has(ch)) label.tspan(ch).dx(-2)
       else label.plain(ch === initialLayout.layout[key] ? '' : ch)
@@ -59,5 +58,5 @@ export const drawActiveKeys = (draw: Svg, keys: string) =>
   draw
     .find('#editable-keys rect')
     .forEach((key) =>
-      key[key.data('keys') === keys ? 'addClass' : 'removeClass']('active')
+      key[key.data('keys') === keys ? 'addClass' : 'removeClass']('active'),
     )

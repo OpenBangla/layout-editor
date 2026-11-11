@@ -5,13 +5,11 @@
         "comment": "This layout is imported from Avro Keyboard.\n",
         "name": "www.omicronlab.com"
       },
-      "image0": "",
-      "image1": "",
       "name": "Avro Easy",
       "version": "3"
     },
     "type": "fixed",
-    "version": "2"
+    "version": "3"
   },
   "layout": {
     "Key_0_AltGr": "",
